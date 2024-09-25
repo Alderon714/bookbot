@@ -7,10 +7,11 @@
 
 def main():
     book_path = "books/frankenstein.txt"
-    text = get_book_text(book_path)
-    print(text)
-    word_count(book_path)
-    #char_count(text)
+    text = get_book_text(book_path) # huge string
+    # print(text) # print string : removed book printout
+    total_word_count = word_count(book_path) # count words and letters used in file/path
+    letters_dict = letter_count(book_path)
+    produce_report(book_path,letters_dict,total_word_count)
     
 def get_book_text(path):
     # This will take a path/to/file and return a read of the file's content.
@@ -25,14 +26,19 @@ def word_count(file_path):
     with open(file_path, 'r') as file: 
         text = file.read() 
         words = text.split() 
-        count = len(words) 
-        print(" *** word count ***")
-        print(f"The text file contains {count} words.")
+        count = len(words)
+    return count # Added return of count of words as integer
+        # print(" *** word count ***")
+        # print(f"The text file contains {count} words.")
 
+def letter_count(file_path):
+    with open(file_path, 'r') as file:
+        text = file.read()
         # Now get the number of times the letter is used in the book (text file)
         char_counts = char_count(text) 
-        for char, countc in char_counts.items(): 
-            print(f"{char}: {countc}")
+        # for char, countc in char_counts.items(): # Removed print to return dict. 
+        #    print(f"{char}: {countc}")
+    return char_counts
 
 
 def char_count(text):
@@ -48,6 +54,22 @@ def char_count(text):
         if char.isalpha(): 
             count[char] = count.get(char, 0) + 1 
     return count
+
+# Report takes path/file, letters' dictionary, and total word count and formats 
+# into a report per instructions.
+def produce_report(title, numbers, total): 
+    print(f"{'-' * 50}") 
+    print(f"--- Begin report of {title} ---") 
+    print(f"{'-' * 50}")
+    print(f"{total} words found in the document")
+    print(f"{'-' * 50}")
+ 
+    sorted_numbers = dict(sorted(numbers.items(), key=lambda item: item[1], reverse=True))
+
+    for key, value in sorted_numbers.items():
+        print(f"The '{key}' character was found {value} times")
+    print(f"--- End report ---")
+
 
 # Run the script's functions ie. Get to work!
 main()
